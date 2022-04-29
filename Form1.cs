@@ -18,12 +18,17 @@ namespace NamedPipeTest
 {
     public partial class Form1 : Form
     {
-        private static string logFilePath = @"C:\Temp\TestPipe.log";
+        private static string logFilePath = @"C:\Temp\Log\TestPipe.log";
+        private static string logPath = @"C:\Temp\Log\";
+        private LogFileWatcher logWatcher;
 
         public Form1()
         {
             InitializeComponent();
+
             Log("Name Pipe test started");
+           // logWatcher = new LogFileWatcher(logPath, LogFileRichBox);
+          //  LogFileRichBox.DataBindings.Add("Text", logWatcher, "FileContent");
         }
 
         private static void Log(string textToLog)
@@ -55,6 +60,9 @@ namespace NamedPipeTest
             // Current user must be able to create, read, write &c..
             Log($"WindowsIdentity = {WindowsIdentity.GetCurrent().Name}");
 
+            Log($"User = {WindowsIdentity.GetCurrent().User}");
+            Log($"Groups = { string.Join(", '\n' ", WindowsIdentity.GetCurrent().Groups.ToList())}");
+
             Log($"Network Sid = {WellKnownSidType.NetworkSid}");
 
             ps.AddAccessRule(new PipeAccessRule(WindowsIdentity.GetCurrent().Name, PipeAccessRights.FullControl,
@@ -65,8 +73,6 @@ namespace NamedPipeTest
             ps.AddAccessRule(new PipeAccessRule(new SecurityIdentifier(WellKnownSidType.NetworkSid, null),
                 PipeAccessRights.FullControl, AccessControlType.Deny));
 
-
-
             // The pipe client is supported in various frameworks.
 
             // This server currently is only required for the daemon which uses .NET Framework.
@@ -74,26 +80,27 @@ namespace NamedPipeTest
             // Implementations for other frameworks are provided here to allow this project to build.
             try
             {
+                Log($"Pipe security added.");
                 var pipeStream =
 
-#if NET461_OR_GREATER // .NET Framework, currently used by the daemon
+//#if NET461_OR_GREATER // .NET Framework, currently used by the daemon
 
             new NamedPipeServerStream(pipeName, PipeDirection.InOut, 20, PipeTransmissionMode.Message, PipeOptions.None, 4096, 4096, ps);
 
-#elif NET6_0_OR_GREATER // .NET 6
+//#elif NET6_0_OR_GREATER // .NET 6
 
-            // To be implemented.
+//            // To be implemented.
 
-            // See https://docs.microsoft.com/en-us/dotnet/api/system.io.pipes.namedpipeserverstreamacl.create?view=net-6.0
+//            // See https://docs.microsoft.com/en-us/dotnet/api/system.io.pipes.namedpipeserverstreamacl.create?view=net-6.0
 
-#error .NET 6 is not yet supported
+//#error .NET 6 is not yet supported
 
-#else // Less secure fallback for .NET Standard, not recommended
+//#else // Less secure fallback for .NET Standard, not recommended
 
-                    new NamedPipeServerStream(pipeName, PipeDirection.InOut, 20, PipeTransmissionMode.Message,
-                        PipeOptions.None);
+//                    new NamedPipeServerStream(pipeName, PipeDirection.InOut, 20, PipeTransmissionMode.Message,
+//                        PipeOptions.None);
 
-#endif
+//#endif
                 Log("Waiting for connection..............");
                 pipeStream.WaitForConnection();
 
@@ -112,6 +119,40 @@ namespace NamedPipeTest
         private void button2_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
+        {
+
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            var fileContent = string.Empty;
+            var filePath = string.Empty;
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.InitialDirectory = logPath;
+                openFileDialog.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+                openFileDialog.FilterIndex = 2;
+                openFileDialog.RestoreDirectory = true;
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    //Get the path of specified file
+                    filePath = openFileDialog.FileName;
+
+                    //Read the contents of the file into a stream
+                    var fileStream = openFileDialog.OpenFile();
+
+                    using (StreamReader reader = new StreamReader(fileStream))
+                    {
+                        fileContent = reader.ReadToEnd();
+                    }
+                }
+
+                LogFileRichBox.Text = fileContent;
+            }
         }
     }
 

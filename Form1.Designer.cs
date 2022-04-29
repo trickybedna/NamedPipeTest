@@ -33,6 +33,10 @@ namespace NamedPipeTest
             this.button2 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.PipeNameTxt = new System.Windows.Forms.TextBox();
+            this.LogFileRichBox = new System.Windows.Forms.RichTextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.button3 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button1
@@ -71,11 +75,46 @@ namespace NamedPipeTest
             this.PipeNameTxt.Size = new System.Drawing.Size(235, 20);
             this.PipeNameTxt.TabIndex = 3;
             // 
+            // LogFileRichBox
+            // 
+            this.LogFileRichBox.Location = new System.Drawing.Point(12, 138);
+            this.LogFileRichBox.Name = "LogFileRichBox";
+            this.LogFileRichBox.Size = new System.Drawing.Size(776, 310);
+            this.LogFileRichBox.TabIndex = 4;
+            this.LogFileRichBox.Text = "";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(743, 122);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(45, 13);
+            this.label2.TabIndex = 5;
+            this.label2.Text = "Logging";
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            this.openFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialog1_FileOk);
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(602, 68);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(75, 23);
+            this.button3.TabIndex = 6;
+            this.button3.Text = "Open log file";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.button3);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.LogFileRichBox);
             this.Controls.Add(this.PipeNameTxt);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.button2);
@@ -93,6 +132,10 @@ namespace NamedPipeTest
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox PipeNameTxt;
+        private System.Windows.Forms.RichTextBox LogFileRichBox;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.Button button3;
     }
 }
 
