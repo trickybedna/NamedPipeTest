@@ -25,7 +25,10 @@ namespace NamedPipeTest
         public Form1()
         {
             InitializeComponent();
-
+            if (!Directory.Exists(logPath))
+            {
+                Directory.CreateDirectory(logPath);
+            }
             Log("Name Pipe test started");
            // logWatcher = new LogFileWatcher(logPath, LogFileRichBox);
           //  LogFileRichBox.DataBindings.Add("Text", logWatcher, "FileContent");
